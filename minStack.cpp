@@ -1,73 +1,51 @@
 #include <iostream>
+#include <stack>
 
 using namespace std;
-
-class Node
-{
-public:
-    int val;
-    Node *next;
-    Node(int value)
-    {
-        val = value;
-        next = nullptr;
-    }
-};
 
 class MinStack
 {
 private:
-    Node *topNode;
+    stack<int> dataStack;
+    stack<int> minStack;
 
 public:
+    // void push(int value){
+    //     dataStack.push(value);
+    // }
     MinStack()
     {
-        topNode = nullptr;
     }
 
     void push(int val)
     {
-        if (!topNode)
+        dataStack.push(val);
+        if (minStack.empty() || val <= minStack.top())
         {
-            topNode = new Node(val);
-        }
-        else
-        {
-            Node *newNode = new Node(val);
-            newNode->next = topNode;
-            topNode = newNode;
+            minStack.push(val);
         }
     }
 
     void pop()
     {
-        Node *temp = topNode;
-        topNode = topNode->next;
-        delete temp;
+        if(!minStack.empty()){
+            if (dataStack.top() == minStack.top())
+            {
+                minStack.pop();
+            }
+        }
+        
+        dataStack.pop();
     }
 
     int top()
     {
-        return topNode->val;
+        return dataStack.top();
     }
 
     int getMin()
     {
-        int minVal = topNode->val;
-        Node *temp = topNode->next;
-        cout << "MinVal: " << minVal << endl;
-
-        while (temp)
-        {
-            cout << "temp->val: " << temp->val << endl;
-            if (minVal < temp->val)
-            {
-                minVal = temp->val;
-            }
-            temp = temp->next;
-        }
-
-        return minVal;
+        return minStack.top();
     }
 };
 
@@ -75,10 +53,14 @@ int main()
 {
     MinStack *obj = new MinStack();
     obj->push(-2);
+    // cout << obj->top() << endl;
     obj->push(0);
     obj->push(-3);
+    int param_1 = obj->getMin();
+    obj->pop();
+    int param_2 = obj->top();
+    int param_3 = obj->getMin();
 
-    cout << obj->getMin() << endl;
-
-    delete obj;
+    cout << "param_1: " << param_1 << ", param_2: " << param_2 << ", param_3: " << param_3 << endl;
+    return 0;
 }
